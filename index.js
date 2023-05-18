@@ -11,7 +11,7 @@ app.use(express.json())
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.geakxzz.mongodb.net/?retryWrites=true&w=majority`;
-
+// const uri = "mongodb://0.0.0.0:27017";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -33,13 +33,17 @@ app.get("/alltoy",async(req,res)=>{
     const result=await toyDatabase.find().toArray()
     res.send(result)
 })
-
+app.post('/alltoy',async(req,res)=>{
+    const data=req.body
+    const result= await toyDatabase.insertOne(data)
+    res.send(result)
+})
 app.get('/toy/:id',async(req,res)=>{
     const id=req.params.id
     const query={_id:new ObjectId(id)}
     const result=await toyDatabase.findOne(query)
     res.send(result)
-    console.log(id)
+    // console.log(id)
 })
 
     // Send a ping to confirm a successful connection
