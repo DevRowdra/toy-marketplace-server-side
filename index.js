@@ -7,7 +7,7 @@ app.use(express.json())
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://toyMarketPlace:ENvwrS7a0ObxCWLC@cluster0.geakxzz.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -32,7 +32,13 @@ app.get("/alltoy",async(req,res)=>{
     res.send(result)
 })
 
-
+app.get('/toy/:id',async(req,res)=>{
+    const id=req.params.id
+    const query={_id:new ObjectId(id)}
+    const result=await toyDatabase.findOne(query)
+    res.send(result)
+    console.log(id)
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
