@@ -33,6 +33,14 @@ app.get("/alltoy",async(req,res)=>{
     const result=await toyDatabase.find().toArray()
     res.send(result)
 })
+app.get("/mytoys/:email",async(req,res)=>{
+    
+    // console.log(req.params.email)
+    const result=await toyDatabase.find({sellerEmail:req.params.email}).toArray()
+    res.send(result)
+   
+    
+})
 app.post('/alltoy',async(req,res)=>{
     const data=req.body
     const result= await toyDatabase.insertOne(data)
