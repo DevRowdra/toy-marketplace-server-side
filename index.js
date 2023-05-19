@@ -36,7 +36,7 @@ app.get("/alltoy",async(req,res)=>{
 app.get("/mytoys/:email",async(req,res)=>{
     
     // console.log(req.params.email)
-    const result=await toyDatabase.find({sellerEmail:req.params.email}).sort({ price: -1 }).toArray()
+    const result=await toyDatabase.find({sellerEmail:req.params.email}).sort({ price: 1 }).toArray()
     res.send(result)
    
     
@@ -46,6 +46,28 @@ app.post('/alltoy',async(req,res)=>{
     const result= await toyDatabase.insertOne(data)
     res.send(result)
 })
+
+// us
+app.put('/toy/:id',async(req,res)=>{
+  const id=req.params.id
+  const filter={_id: new ObjectId(id)}
+  const updateToy=req.body
+  console.log(updateToy)
+  const options = { upsert: true };
+  const updatedToy={
+    $set:{
+      price:updateToy.price
+      ,
+      quantity:updateToy.quantity,
+      description:updateToy.description
+
+    }
+  }
+  const result= await toyDatabase.updateOne(filter,updatedToy,options)
+  res.send(result)
+  console.log(id)
+})
+// us
 app.get('/toy/:id',async(req,res)=>{
     const id=req.params.id
     const query={_id:new ObjectId(id)}
@@ -53,7 +75,7 @@ app.get('/toy/:id',async(req,res)=>{
     res.send(result)
     // console.log(id)
 })
-app.delete('/DeleteToy/:id',async(req,res)=>{
+app.delete('/toy/:id',async(req,res)=>{
     const id=req.params.id
     const query={_id:new ObjectId(id)}
     const result=await toyDatabase.deleteOne(query)
