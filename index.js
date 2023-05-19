@@ -46,7 +46,10 @@ app.post('/alltoy',async(req,res)=>{
     const result= await toyDatabase.insertOne(data)
     res.send(result)
 })
-
+app.get('/toycategory/:category',async(req,res)=>{
+  const result  = await toyDatabase.find({subCategory:req.params.category}).limit(3).toArray()
+  res.send(result)
+})
 // us
 app.put('/toy/:id',async(req,res)=>{
   const id=req.params.id
