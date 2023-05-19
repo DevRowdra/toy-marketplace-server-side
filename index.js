@@ -30,13 +30,13 @@ async function run() {
     
 
 app.get("/alltoy",async(req,res)=>{
-    const result=await toyDatabase.find().toArray()
+    const result=await toyDatabase.find().limit(20).toArray()
     res.send(result)
 })
 app.get("/mytoys/:email",async(req,res)=>{
     
     // console.log(req.params.email)
-    const result=await toyDatabase.find({sellerEmail:req.params.email}).toArray()
+    const result=await toyDatabase.find({sellerEmail:req.params.email}).sort({ price: -1 }).toArray()
     res.send(result)
    
     
@@ -50,6 +50,13 @@ app.get('/toy/:id',async(req,res)=>{
     const id=req.params.id
     const query={_id:new ObjectId(id)}
     const result=await toyDatabase.findOne(query)
+    res.send(result)
+    // console.log(id)
+})
+app.delete('/DeleteToy/:id',async(req,res)=>{
+    const id=req.params.id
+    const query={_id:new ObjectId(id)}
+    const result=await toyDatabase.deleteOne(query)
     res.send(result)
     // console.log(id)
 })
