@@ -27,19 +27,11 @@ async function run() {
     // await client.connect();
     const toyDatabase = client.db("toyMarketPlace").collection("toy")
 
-    const indexKeys={name:1}
-    const indexOption={name:"toyName"}
+    // const indexKeys={name:1}
+    // const indexOption={name:"toyName"}
 
-    const result=await toyDatabase.createIndex(indexKeys,indexOption); 
-app.get('/searchToyName/:name',async(req,res)=>{
-  const searchName=req.params.name;
-  const result= await toyDatabase.find({
-    $or:[
-      {name:{$regex:searchName, $options:'i'}}
-    ]
-  }).limit(20).toArray()
-  res.json(result)
-})
+    // const result=await toyDatabase.createIndex(indexKeys,indexOption); 
+
 app.get("/alltoy",async(req,res)=>{
     const result=await toyDatabase.find().limit(20).toArray()
    res.json(result)
@@ -70,8 +62,7 @@ app.put('/toy/:id',async(req,res)=>{
   const options = { upsert: true };
   const updatedToy={
     $set:{
-      price:updateToy.price
-      ,
+      price:updateToy.price,
       quantity:updateToy.quantity,
       description:updateToy.description
 
@@ -96,10 +87,17 @@ app.delete('/toy/:id',async(req,res)=>{
    res.json(result)
     // console.log(id)
 })
-
+app.get("/searchToyName/:toyName",async (req,res)=>{
+  const name=req.params.toyName
+  const result=await toyDatabase.find({ $or:[
+    {name:{$regex:name, $options:'i'}}
+  ]}).toArray()
+  res.send(result)
+  console.log(name)
+})
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
