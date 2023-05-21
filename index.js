@@ -26,10 +26,7 @@ async function run() {
     const toyDatabase = client.db('toyMarketPlace').collection('toy');
     const blogData = client.db('toyMarketPlace').collection('blogPost');
 
-    // const indexKeys={name:1}
-    // const indexOption={name:"toyName"}
-
-    // const result=await toyDatabase.createIndex(indexKeys,indexOption);
+   
     app.get('/blog', async (req, res) => {
       const result = await blogData.find().toArray();
       res.json(result);
@@ -39,53 +36,28 @@ async function run() {
       res.json(result);
     });
 
-    // try
-    // app.get('/terstToy/:email', async (req, res) => {
-    //   console.log(req.query);
-    //   const email = req.params.email;
-    //   const result = await toyDatabase.aggregate([
-    //     { "$match": { "sellerEmail": email } },
-    //     { "$sort": { "price": 1 } },
-    //     { "$limit": 10 }
-    //   ]).toArray();
-
-    //   res.send(result)
-    // })
+    
 
     app.get('/terstToy', async (req, res) => {
       console.log(req.query);
       const email = req.query.email;
-      const sortDirection = req.query.sort || 'asc'; // Default to ascending order if no sort parameter is provided
+      const sortDirection = req.query.sort || 'asc';
       console.log(req.query);
-
-      const sortOption = sortDirection === 'asc' ? 1 : -1;
+      const sortOption = sortDirection == 'asc' ? 1 : -1;
+      console.log(sortOption)
 
       const result = await toyDatabase
         .aggregate([
           { $match: { sellerEmail: email } },
           { $sort: { price: sortOption } },
-          { $limit: 10 },
+       
         ])
         .toArray();
-
+   
       res.json(result);
     });
 
-    // try
-
-    app.get('/mytoys/:email', async (req, res) => {
-      // const type=req.query.type =="ascending"
-      // const value=req.query.value;
-      // console.log(value)
-      // const sortObj={}
-      // sortObj[value]=type ? 1 : -1;
-      // console.log(req.params.email)
-      const result = await toyDatabase
-        .find({ sellerEmail: req.params.email })
-        .sort({ price: 1 })
-        .toArray();
-      res.json(result);
-    });
+  
     app.post('/alltoy', async (req, res) => {
       const data = req.body;
       const result = await toyDatabase.insertOne(data);
