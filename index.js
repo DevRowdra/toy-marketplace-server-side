@@ -26,12 +26,16 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const toyDatabase = client.db("toyMarketPlace").collection("toy")
+    const blogData = client.db("toyMarketPlace").collection("blogPost")
 
     // const indexKeys={name:1}
     // const indexOption={name:"toyName"}
 
     // const result=await toyDatabase.createIndex(indexKeys,indexOption); 
-
+app.get('/blog',async(req,res)=>{
+const result=await blogData.find().toArray()
+res.json(result)
+})
 app.get("/alltoy",async(req,res)=>{
     const result=await toyDatabase.find().limit(20).toArray()
    res.json(result)
